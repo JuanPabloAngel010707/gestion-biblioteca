@@ -31,10 +31,12 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public Usuario crearUsuario(Usuario usuario) {
+    	
     	if (usuarioExistente(usuario.getDni())) {
-    		throw new IllegalArgumentException("El usuario con DNI " + usuario.getDni() + " ya existe.");   		
-    	}
+        	throw new IllegalArgumentException("El usuario con DNI " + usuario.getDni() + " ya existe.");   		
+        }
         return usuarioRepository.save(usuario);
+    	
     }
 
     @Override

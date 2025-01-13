@@ -80,6 +80,20 @@ public class PrestamoServiceImpl implements PrestamoService {
     }
     
     @Override
+    public Prestamo devolverPrestamo(Long id) {
+
+        Prestamo prestamo = buscarPorId(id)
+                .orElseThrow(() -> new IllegalArgumentException("El préstamo con ID " + id + " no existe."));
+        
+        if (!prestamo.getEstado().equals("activo")) {
+            throw new IllegalArgumentException("El préstamo con ID " + id + " ya ha sido devuelto.");
+        }
+        prestamo.setFechaDevolucion(LocalDate.now());  
+        prestamo.setEstado("devuelto"); 
+        return prestamoRepository.save(prestamo);
+    }
+    
+    @Override
     public Boolean prestamoExistente(Long id) {
     	Optional<Prestamo> prestamoExistente = buscarPorId(id);
     	if (prestamoExistente.isPresent()) {

@@ -12,5 +12,6 @@ public interface PrestamoService {
     Prestamo crearPrestamo(String isbnLibro, String dniUsuario);
     void eliminarPrestamo(Long id);
     Boolean prestamoExistente(Long id);
+    Prestamo devolverPrestamo(Long id);
 }
 

@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.Optional;
 import com.biblioteca.gestion_biblioteca.model.Libro;
 import com.biblioteca.gestion_biblioteca.model.Autor;
+import com.biblioteca.gestion_biblioteca.model.Prestamo;
 import com.biblioteca.gestion_biblioteca.repository.LibroRepository;
+import com.biblioteca.gestion_biblioteca.repository.PrestamoRepository;
 
 
 
@@ -17,13 +19,14 @@ public class LibroServiceImpl implements LibroService {
     private final LibroRepository libroRepository;
     private final AutorService autorService;
     private final AutorLibroService autorLibroService;
+    private final PrestamoRepository prestamoRepository;
 
     @Autowired
-    public LibroServiceImpl(LibroRepository libroRepository, AutorService autorService, AutorLibroService autorLibroService) {
+    public LibroServiceImpl(LibroRepository libroRepository, AutorService autorService, AutorLibroService autorLibroService, PrestamoRepository prestamoRepository) {
         this.libroRepository = libroRepository;
         this.autorService = autorService;
         this.autorLibroService = autorLibroService;
-
+        this.prestamoRepository = prestamoRepository;
     }
     
     @Override
@@ -48,13 +51,16 @@ public class LibroServiceImpl implements LibroService {
     
     @Override
     public Libro crearLibro(Libro libro, String nombreAutor) {
+    	
     	if (libroExistente(libro.getIsbn())) {
     		throw new IllegalArgumentException("El libro con ISBN " + libro.getIsbn() + " ya existe."); 		
     	}
+    	
+    	
     	Libro libroGuardado = libroRepository.save(libro);
-    	Autor autor = autorService.crearAutorConLibro(nombreAutor);
+        Autor autor = autorService.crearAutorConLibro(nombreAutor);
         autorLibroService.crearAutorLibro(libroGuardado, autor); 
-        return libroGuardado;
+        return libroGuardado;	
     }
 
     @Override
@@ -62,6 +68,12 @@ public class LibroServiceImpl implements LibroService {
     	if (!libroExistente(isbn)) {
     		throw new IllegalArgumentException("El libro con ISBN " + isbn + " no existe."); 		
     	}
+    	
+    	List<Prestamo> prestamosActivos = prestamoRepository.findByLibroIsbnAndEstado(isbn, "activo");
+        if (!prestamosActivos.isEmpty()) {
+            throw new IllegalArgumentException("No se puede eliminar el libro con ISBN " + isbn + 
+                                               " porque tiene préstamos activos. ");
+        }
         libroRepository.deleteById(isbn);
     }
     
@@ -92,5 +104,6 @@ public class LibroServiceImpl implements LibroService {
         }
     	return false;
     }
+    
 }
 

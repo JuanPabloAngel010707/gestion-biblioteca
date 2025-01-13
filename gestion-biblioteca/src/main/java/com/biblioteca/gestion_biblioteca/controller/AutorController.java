@@ -5,6 +5,7 @@ import com.biblioteca.gestion_biblioteca.service.AutorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,7 +36,7 @@ public class AutorController {
     }
 
     @PostMapping
-    public ResponseEntity<?> crearAutor(@RequestBody Autor autor) {
+    public ResponseEntity<?> crearAutor(@Valid @RequestBody Autor autor) {
     	Autor nuevoAutor = autorService.crearAutor(autor);
         return new ResponseEntity<>(nuevoAutor, HttpStatus.CREATED); 	
     }

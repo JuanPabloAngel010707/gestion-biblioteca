@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import com.biblioteca.gestion_biblioteca.model.Autor;
 import com.biblioteca.gestion_biblioteca.repository.AutorRepository;
+import jakarta.validation.Valid;
 
 
 @Service
@@ -35,8 +36,8 @@ public class AutorServiceImpl implements AutorService {
     }
 
     @Override
-    public Autor crearAutor(Autor autor) {
-        return autorRepository.save(autor);
+    public Autor crearAutor(@Valid Autor autor) {
+    	return autorRepository.save(autor); 		
     }
 
     @Override

@@ -64,6 +64,16 @@ public class PrestamoController {
         	return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+    
+    @PutMapping("/{id}/devolver")
+    public ResponseEntity<?> devolverPrestamo(@PathVariable Long id) {
+        try {
+            Prestamo prestamoDevuelto = prestamoService.devolverPrestamo(id);
+            return new ResponseEntity<>(prestamoDevuelto, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminarPrestamo(@PathVariable Long id) {

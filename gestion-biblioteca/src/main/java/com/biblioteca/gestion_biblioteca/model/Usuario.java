@@ -16,10 +16,10 @@ public class Usuario {
     @Column(nullable = false)
     private String apellido;
 
-    @Column
+    @Column(nullable = false)
     private String telefono;
 
-    @Column
+    @Column(nullable = false)
     private String direccion;
 
     public String getDni() {
