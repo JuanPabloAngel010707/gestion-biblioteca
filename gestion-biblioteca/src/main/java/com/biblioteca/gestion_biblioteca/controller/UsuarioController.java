@@ -2,10 +2,14 @@ package com.biblioteca.gestion_biblioteca.controller;
 
 import com.biblioteca.gestion_biblioteca.model.Usuario;
 import com.biblioteca.gestion_biblioteca.service.UsuarioService;
+
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -35,7 +39,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/crear")
-    public ResponseEntity<?> crearUsuario(@RequestBody Usuario usuario) {
+    public ResponseEntity<?> crearUsuario(@Valid @RequestBody Usuario usuario) {
     	try {
     		Usuario nuevoUsuario = usuarioService.crearUsuario(usuario);
             return new ResponseEntity<>(nuevoUsuario, HttpStatus.CREATED);
@@ -56,7 +60,7 @@ public class UsuarioController {
     }
     
     @PutMapping("/{dni}")
-    public ResponseEntity<?> editarUsuario(@PathVariable String dni, @RequestBody Usuario usuarioActualizado) {
+    public ResponseEntity<?> editarUsuario(@Valid @PathVariable String dni, @RequestBody Usuario usuarioActualizado) {
        try {
             Usuario usuarioEditado = usuarioService.actualizarUsuario(dni, usuarioActualizado);
             return new ResponseEntity<>(usuarioEditado, HttpStatus.OK);

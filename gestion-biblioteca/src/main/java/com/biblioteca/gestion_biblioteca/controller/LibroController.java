@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.util.List;
 import java.util.Optional;
@@ -44,7 +45,7 @@ public class LibroController {
     }
     
     @PostMapping("/crear")
-    public ResponseEntity<?> crearLibro(@RequestBody Libro libro, @RequestParam String nombreAutor) {
+    public ResponseEntity<?> crearLibro(@Valid @RequestBody Libro libro, @RequestParam String nombreAutor) {
         try {
         	Libro nuevoLibro = libroService.crearLibro(libro, nombreAutor);
             return new ResponseEntity<>(nuevoLibro, HttpStatus.CREATED);   	
@@ -74,7 +75,7 @@ public class LibroController {
     }
     
     @PutMapping("/{isbn}")
-    public ResponseEntity<?> editarLibro(@PathVariable String isbn, @RequestBody Libro libroActualizado) {
+    public ResponseEntity<?> editarLibro(@Valid @PathVariable String isbn, @RequestBody Libro libroActualizado) {
         try {
             Libro libroEditado = libroService.actualizarLibro(isbn, libroActualizado);
             return new ResponseEntity<>(libroEditado, HttpStatus.OK);

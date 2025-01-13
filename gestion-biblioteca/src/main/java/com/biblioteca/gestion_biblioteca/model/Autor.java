@@ -2,6 +2,7 @@ package com.biblioteca.gestion_biblioteca.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.util.Set;
 
@@ -14,8 +15,9 @@ public class Autor {
     private Long id;
 
     @NotBlank(message = "El nombre del autor no puede estar vacío.")
+    @NotNull(message = "El nombre del autor no puede ser nulo.")
     @Size(min = 2, max = 100, message = "El nombre del autor debe tener entre 2 y 100 caracteres.")
-    @Column(nullable = false)
+    @Column
     private String nombre;
 
     @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL, orphanRemoval = true)  
