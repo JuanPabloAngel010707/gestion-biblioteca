@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 import java.util.Set;
@@ -14,9 +15,9 @@ import java.util.Set;
 public class Libro {
 
     @Id
+    @Pattern(regexp = "^(?:978|979)\\d{10}$", message = "El isbn debe cumplir con el formato ISBN-13, pero no tener guiones.")
     @NotBlank(message = "El isbn del libro no puede estar vacío.")
     @NotNull(message = "El isbn del libro no puede ser nulo.")
-    @Size(min = 13, max = 13, message = "El isbn del libro debe tener 13 caracteres (ISBN-13).")
     @Column(name = "isbn")
     private String isbn;
 
@@ -34,11 +35,10 @@ public class Libro {
 
     @NotBlank(message = "La edicion del libro no puede estar vacía.")
     @NotNull(message = "La edicion del libro no puede ser nula.")
-    @Size(min = 4, max = 4, message = "La edicion del libro debe tener entre 2 y 100 caracteres.")
+    @Size(min = 2, max = 100, message = "La edicion del libro debe tener entre 2 y 100 caracteres.")
     @Column
     private String edicion;
     
-    @NotBlank(message = "El año de publicación del libro no puede estar vacío.")
     @NotNull(message = "El año de publicación del libro no puede ser nulo.")
     @Min(value = 1000, message = "El año de publicación debe ser un número de 4 dígitos.")
     @Max(value = 9999, message = "El año de publicación debe ser un número de 4 dígitos.")
