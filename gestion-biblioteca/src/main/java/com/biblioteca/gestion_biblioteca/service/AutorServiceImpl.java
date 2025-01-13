@@ -41,6 +41,9 @@ public class AutorServiceImpl implements AutorService {
 
     @Override
     public void eliminarAutor(Long id) {
+    	if (!autorExistente(id)) {
+    		throw new IllegalArgumentException("El autor con ID " + id + " no existe.");	
+    	}
         autorRepository.deleteById(id);
     }
     
@@ -56,9 +59,16 @@ public class AutorServiceImpl implements AutorService {
             nuevoAutor.setNombre(nombreAutor);
 
             return crearAutor(nuevoAutor);
-        } 
-        
-    			
+        } 		
+    }
+    
+    @Override    
+    public Boolean autorExistente(Long id) {
+    	Optional<Autor> autorExistente = buscarPorId(id);
+    	if (autorExistente.isPresent()) {
+    		return true;      
+        }	
+    	return false;
     }
 }
 

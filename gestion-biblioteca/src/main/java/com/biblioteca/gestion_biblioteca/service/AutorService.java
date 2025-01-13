@@ -11,5 +11,6 @@ public interface AutorService {
     Autor crearAutor(Autor autor);
     void eliminarAutor(Long id);
     Autor crearAutorConLibro(String nombreAutor);
+    Boolean autorExistente(Long id);
 }
 

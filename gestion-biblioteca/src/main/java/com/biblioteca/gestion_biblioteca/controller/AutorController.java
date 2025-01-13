@@ -35,15 +35,20 @@ public class AutorController {
     }
 
     @PostMapping
-    public ResponseEntity<Autor> crearAutor(@RequestBody Autor autor) {
-        Autor nuevoAutor = autorService.crearAutor(autor);
-        return new ResponseEntity<>(nuevoAutor, HttpStatus.CREATED);
+    public ResponseEntity<?> crearAutor(@RequestBody Autor autor) {
+    	Autor nuevoAutor = autorService.crearAutor(autor);
+        return new ResponseEntity<>(nuevoAutor, HttpStatus.CREATED); 	
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarAutor(@PathVariable Long id) {
-        autorService.eliminarAutor(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public ResponseEntity<?> eliminarAutor(@PathVariable Long id) {
+    	try {
+    		autorService.eliminarAutor(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        
+    	} catch (IllegalArgumentException e) {
+    		return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    	}
     }
 }
 

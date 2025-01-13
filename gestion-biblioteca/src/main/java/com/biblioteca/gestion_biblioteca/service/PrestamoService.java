@@ -9,7 +9,8 @@ public interface PrestamoService {
     List<Prestamo> buscarPorIsbnLibro(String isbnLibro);
     List<Prestamo> buscarPorDniUsuario(String dniUsuario);
     Optional<Prestamo> buscarPorId(Long id);
-    Prestamo crearPrestamo(Prestamo prestamo);
+    Prestamo crearPrestamo(String isbnLibro, String dniUsuario);
     void eliminarPrestamo(Long id);
+    Boolean prestamoExistente(Long id);
 }
 

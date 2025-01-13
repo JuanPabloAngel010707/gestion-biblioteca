@@ -7,9 +7,10 @@ import com.biblioteca.gestion_biblioteca.model.Libro;
 public interface LibroService {
 	List<Libro> buscarTodos();
     List<Libro> buscarPorTitulo(String titulo);
-    List<Libro> buscarPorAutor(Long autorId);
+    List<Libro> buscarPorAutor(String autorNombre);
     Optional<Libro> buscarPorIsbn(String isbn);
     Libro crearLibro(Libro libro, String nombreAutor);
     void eliminarLibro(String isbn);
-    Libro actualizarLibro(Libro libro);
+    Libro actualizarLibro(String isbn, Libro libro);
+    Boolean libroExistente(String isbn);
 }

@@ -35,33 +35,33 @@ public class UsuarioController {
     }
 
     @PostMapping("/crear")
-    public ResponseEntity<Usuario> crearUsuario(@RequestBody Usuario usuario) {
-        Usuario nuevoUsuario = usuarioService.crearUsuario(usuario);
-        return new ResponseEntity<>(nuevoUsuario, HttpStatus.CREATED);
+    public ResponseEntity<?> crearUsuario(@RequestBody Usuario usuario) {
+    	try {
+    		Usuario nuevoUsuario = usuarioService.crearUsuario(usuario);
+            return new ResponseEntity<>(nuevoUsuario, HttpStatus.CREATED);
+    	} catch (IllegalArgumentException e) {
+    		return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    	}
     }
 
     @DeleteMapping("/{dni}")
-    public ResponseEntity<Void> eliminarUsuario(@PathVariable String dni) {
-        usuarioService.eliminarUsuario(dni);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public ResponseEntity<?> eliminarUsuario(@PathVariable String dni) {
+    	try {
+    		usuarioService.eliminarUsuario(dni);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    	} catch (IllegalArgumentException e) {
+    		return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    	}
+        
     }
     
     @PutMapping("/{dni}")
-    public ResponseEntity<Usuario> editarUsuario(@PathVariable String dni, @RequestBody Usuario usuarioActualizado) {
-        Optional<Usuario> usuarioExistente = usuarioService.buscarPorDni(dni);
-
-        if (usuarioExistente.isPresent()) {
-            Usuario usuario = usuarioExistente.get();
-
-            usuario.setNombre(usuarioActualizado.getNombre());
-            usuario.setApellido(usuarioActualizado.getApellido());
-            usuario.setTelefono(usuarioActualizado.getTelefono());
-            usuario.setDireccion(usuarioActualizado.getDireccion());
-
-            Usuario usuarioEditado = usuarioService.actualizarUsuario(usuario);
+    public ResponseEntity<?> editarUsuario(@PathVariable String dni, @RequestBody Usuario usuarioActualizado) {
+       try {
+            Usuario usuarioEditado = usuarioService.actualizarUsuario(dni, usuarioActualizado);
             return new ResponseEntity<>(usuarioEditado, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (IllegalArgumentException e) {
+        	return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 }

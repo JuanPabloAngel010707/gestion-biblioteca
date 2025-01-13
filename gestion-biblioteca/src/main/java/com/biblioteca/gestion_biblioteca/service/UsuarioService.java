@@ -9,5 +9,6 @@ public interface UsuarioService {
 	Optional<Usuario> buscarPorDni(String dni);
     Usuario crearUsuario(Usuario usuario);
     void eliminarUsuario(String dni);
-    Usuario actualizarUsuario(Usuario usuario);
+    Usuario actualizarUsuario(String dni, Usuario usuario);
+    Boolean usuarioExistente(String dni);
 }

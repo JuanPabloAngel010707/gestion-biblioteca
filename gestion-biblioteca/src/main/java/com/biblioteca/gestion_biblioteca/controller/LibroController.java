@@ -34,9 +34,9 @@ public class LibroController {
                     .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @GetMapping("/autor/{autorId}")
-    public ResponseEntity<List<Libro>> buscarPorAutor(@PathVariable Long autorId) {
-        List<Libro> libros = libroService.buscarPorAutor(autorId);
+    @GetMapping("/autor/{autorNombre}")
+    public ResponseEntity<List<Libro>> buscarPorAutor(@PathVariable String autorNombre) {
+        List<Libro> libros = libroService.buscarPorAutor(autorNombre);
         if (libros.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
         }
@@ -44,41 +44,42 @@ public class LibroController {
     }
     
     @PostMapping("/crear")
-    public ResponseEntity<Libro> crearLibro(@RequestBody Libro libro,
-                                            @RequestParam String nombreAutor) {
-        Libro nuevoLibro = libroService.crearLibro(libro, nombreAutor);
-        return new ResponseEntity<>(nuevoLibro, HttpStatus.CREATED);
+    public ResponseEntity<?> crearLibro(@RequestBody Libro libro, @RequestParam String nombreAutor) {
+        try {
+        	Libro nuevoLibro = libroService.crearLibro(libro, nombreAutor);
+            return new ResponseEntity<>(nuevoLibro, HttpStatus.CREATED);   	
+        } catch (IllegalArgumentException e) {
+        	return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
     }
 
     @DeleteMapping("/{isbn}")
-    public ResponseEntity<Void> eliminarLibro(@PathVariable String isbn) {
-        libroService.eliminarLibro(isbn);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public ResponseEntity<?> eliminarLibro(@PathVariable String isbn) {
+    	try {
+    		libroService.eliminarLibro(isbn);
+    		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    	} catch (IllegalArgumentException e) {
+        	return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }   
     }
 
-    @GetMapping("/buscar")
-    public ResponseEntity<List<Libro>> buscarPorTitulo(@RequestParam String titulo) {
+    @GetMapping("/buscar/{titulo}")
+    public ResponseEntity<List<Libro>> buscarPorTitulo(@PathVariable String titulo) {
         List<Libro> libros = libroService.buscarPorTitulo(titulo);
-        return new ResponseEntity<>(libros, HttpStatus.OK);
+        if (libros.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
+        }
+        return new ResponseEntity<>(libros, HttpStatus.OK); 
     }
     
     @PutMapping("/{isbn}")
-    public ResponseEntity<Libro> editarLibro(@PathVariable String isbn, @RequestBody Libro libroActualizado) {
-        Optional<Libro> libroExistente = libroService.buscarPorIsbn(isbn);
-
-        if (libroExistente.isPresent()) {
-            Libro libro = libroExistente.get();
-
-            libro.setTitulo(libroActualizado.getTitulo());
-            libro.setEditorial(libroActualizado.getEditorial());
-            libro.setEdicion(libroActualizado.getEdicion());
-            libro.setAnoPublicacion(libroActualizado.getAnoPublicacion());
-            libro.setCantidad(libroActualizado.getCantidad());
-
-            Libro libroEditado = libroService.actualizarLibro(libro);
+    public ResponseEntity<?> editarLibro(@PathVariable String isbn, @RequestBody Libro libroActualizado) {
+        try {
+            Libro libroEditado = libroService.actualizarLibro(isbn, libroActualizado);
             return new ResponseEntity<>(libroEditado, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (IllegalArgumentException e) {
+        	return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 }

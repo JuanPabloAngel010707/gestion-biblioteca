@@ -1,7 +1,6 @@
 package com.biblioteca.gestion_biblioteca.model;
 
 import jakarta.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name = "usuario")
@@ -22,9 +21,6 @@ public class Usuario {
 
     @Column
     private String direccion;
-
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
-    private List<Prestamo> prestamos;
 
     public String getDni() {
         return dni;
@@ -66,12 +62,5 @@ public class Usuario {
         this.direccion = direccion;
     }
 
-    public List<Prestamo> getPrestamos() {
-        return prestamos;
-    }
-
-    public void setPrestamos(List<Prestamo> prestamos) {
-        this.prestamos = prestamos;
-    }
 }
 

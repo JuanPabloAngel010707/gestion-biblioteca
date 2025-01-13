@@ -37,18 +37,20 @@ public class LibroServiceImpl implements LibroService {
     }
 
     @Override
-    public List<Libro> buscarPorAutor(Long autorId) {
-    	return libroRepository.findByAutorLibrosAutorId(autorId);
+    public List<Libro> buscarPorAutor(String autorNombre) {
+    	return libroRepository.findByAutorLibrosAutorNombreContainingIgnoreCase(autorNombre);
     }
 
     @Override
-    public Optional<Libro> buscarPorIsbn(String isbn) {
-        
+    public Optional<Libro> buscarPorIsbn(String isbn) { 
         return libroRepository.findById(isbn);
     }
     
     @Override
     public Libro crearLibro(Libro libro, String nombreAutor) {
+    	if (libroExistente(libro.getIsbn())) {
+    		throw new IllegalArgumentException("El libro con ISBN " + libro.getIsbn() + " ya existe."); 		
+    	}
     	Libro libroGuardado = libroRepository.save(libro);
     	Autor autor = autorService.crearAutorConLibro(nombreAutor);
         autorLibroService.crearAutorLibro(libroGuardado, autor); 
@@ -57,13 +59,38 @@ public class LibroServiceImpl implements LibroService {
 
     @Override
     public void eliminarLibro(String isbn) {
-        
+    	if (!libroExistente(isbn)) {
+    		throw new IllegalArgumentException("El libro con ISBN " + isbn + " no existe."); 		
+    	}
         libroRepository.deleteById(isbn);
     }
     
     @Override
-    public Libro actualizarLibro(Libro libro) {
-        return libroRepository.save(libro);
+    public Libro actualizarLibro(String isbn, Libro libroActualizado) {
+    	Optional<Libro> libroExistente = buscarPorIsbn(isbn);
+    	if (libroExistente.isPresent()) {
+    		
+    	    Libro libro = libroExistente.get();
+
+            libro.setTitulo(libroActualizado.getTitulo());
+            libro.setEditorial(libroActualizado.getEditorial());
+            libro.setEdicion(libroActualizado.getEdicion());
+            libro.setAnoPublicacion(libroActualizado.getAnoPublicacion());
+            
+            return libroRepository.save(libro);
+    	} else {
+            throw new IllegalArgumentException("Libro con ISBN " + isbn + " no existe.");
+        }
+        
+    }
+    
+    @Override
+    public Boolean libroExistente(String isbn) {
+    	Optional<Libro> libroExistente = buscarPorIsbn(isbn);
+    	if (libroExistente.isPresent()) {
+            return true; 
+        }
+    	return false;
     }
 }
 

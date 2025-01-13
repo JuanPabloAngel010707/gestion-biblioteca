@@ -2,7 +2,6 @@ package com.biblioteca.gestion_biblioteca.model;
 
 import jakarta.persistence.*;
 import java.util.Set;
-import java.util.List;
 
 @Entity
 @Table(name = "libro")
@@ -24,14 +23,8 @@ public class Libro {
     @Column(name = "año_pblccn")
     private Integer anoPublicacion;
 
-    @Column(nullable = false)
-    private Integer cantidad;
-
     @OneToMany(mappedBy = "libro", cascade = CascadeType.ALL, orphanRemoval = true)  
     private Set<AutorLibro> autorLibros;
-
-    @OneToMany(mappedBy = "libro", cascade = CascadeType.ALL)
-    private List<Prestamo> prestamos;
 
     // Getters y Setters
     public String getIsbn() {
@@ -74,19 +67,4 @@ public class Libro {
         this.anoPublicacion = anoPublicacion;
     }
 
-    public Integer getCantidad() {
-        return cantidad;
-    }
-
-    public void setCantidad(Integer cantidad) {
-        this.cantidad = cantidad;
-    }
-
-    public List<Prestamo> getPrestamos() {
-        return prestamos;
-    }
-
-    public void setPrestamos(List<Prestamo> prestamos) {
-        this.prestamos = prestamos;
-    }
 }

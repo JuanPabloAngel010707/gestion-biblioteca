@@ -14,5 +14,9 @@ public interface PrestamoRepository extends JpaRepository<Prestamo, Long> {
     List<Prestamo> findByLibroIsbn(String isbn);
 
     List<Prestamo> findByUsuarioDni(String dni);
+    
+    List<Prestamo> findByUsuarioDniAndEstado(String dniUsuario, String estado);
+    
+    List<Prestamo> findByLibroIsbnAndEstado(String isbnLibro, String estado);
 }
 
